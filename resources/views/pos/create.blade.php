@@ -20,49 +20,44 @@
     }">
         <div class="grid grid-cols-3 gap-4">
             @foreach ($products as $product)
-            <div class="border rounded-md p-3 cursor-pointer" @click="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }})">
-                <div class="flex items-center justify-between mb-1">
-                <div class="border rounded-md p-3 cursor-pointer"
+                <div class="border rounded-md p-3 cursor-pointer transition-all"
                     :class="{ 'ring-2 ring-blue-500': selectedId === {{ $product->id }} }"
                     @click="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }})">
-                    <p class="font-medium">{{ $product->name }}</p>
                     
-                    {{-- Badge Stok Menipis --}}
-                    @if ($product->stock < 10)
-                        <span class="text-xs font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-700">
-                            Stok Menipis
-                        </span>
-                    @endif
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">{{ $product->name }}</p>
+                        
+                        {{-- Badge Stok Menipis (Langkah 12) --}}
+                        @if ($product->stock < 10)
+                            <span class="text-xs font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-700">
+                                Stok Menipis
+                            </span>
+                        @endif
+                    </div>
+
+                    <p class="text-sm text-slate-500">Rp {{ number_format($product->price) }}</p>
                 </div>
-                
-                <p class="text-sm text-slate-500">Rp {{ number_format($product->price) }}</p>
-            </div>
             @endforeach
         </div>
-        
+
         <div class="mt-4 border-t pt-3">
-            <div class="mt-4 border-t pt-3">
-                <template x-for="item in cart" :key="item.id">
-                    <div class="flex items-center justify-between border-b py-2">
+            <template x-for="item in cart" :key="item.id">
+                <div class="flex items-center justify-between border-b py-2">
+                    <p x-text="item.name + ' - Rp ' + item.price"></p>
 
-                        <p x-text="item.name + ' - Rp ' + item.price"></p>
+                    <button
+                        type="button"
+                        @click="removeFromCart(item.id)"
+                        class="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600 transition-colors"
+                    >
+                        Hapus
+                    </button>
+                </div>
+            </template>
 
-                        <button
-                            type="button"
-                            @click="removeFromCart(item.id)"
-                            class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
-                        >
-                            Hapus
-                        </button>
-
-                    </div>
-                </template>
-
-                <p class="font-semibold mt-2">
-                    Subtotal: Rp <span x-text="subtotal()"></span>
-                </p>
-
-            </div>
+            <p class="font-semibold mt-2">
+                Subtotal: Rp <span x-text="subtotal()"></span>
+            </p>
         </div>
     </div>
 @endsection
