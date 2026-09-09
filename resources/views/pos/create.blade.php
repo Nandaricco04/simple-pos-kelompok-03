@@ -20,14 +20,26 @@
     }">
         <div class="grid grid-cols-3 gap-4">
             @foreach ($products as $product)
+            <div class="border rounded-md p-3 cursor-pointer" @click="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }})">
+                <div class="flex items-center justify-between mb-1">
                 <div class="border rounded-md p-3 cursor-pointer"
                     :class="{ 'ring-2 ring-blue-500': selectedId === {{ $product->id }} }"
                     @click="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }})">
                     <p class="font-medium">{{ $product->name }}</p>
-                    <p class="text-sm text-slate-500">Rp {{ number_format($product->price) }}</p>
+                    
+                    {{-- Badge Stok Menipis --}}
+                    @if ($product->stock < 10)
+                        <span class="text-xs font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-700">
+                            Stok Menipis
+                        </span>
+                    @endif
                 </div>
+                
+                <p class="text-sm text-slate-500">Rp {{ number_format($product->price) }}</p>
+            </div>
             @endforeach
         </div>
+        
         <div class="mt-4 border-t pt-3">
             <div class="mt-4 border-t pt-3">
                 <template x-for="item in cart" :key="item.id">
