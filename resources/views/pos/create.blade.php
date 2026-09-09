@@ -4,8 +4,10 @@
     <h1 class="text-lg font-semibold mb-4">Transaksi Kasir</h1>
     <div x-data="{
         cart: [],
+        selectedId: null,
         addToCart(id, name, price) {
             this.cart.push({ id, name, price });
+            this.selectedId = id;
         },
         subtotal() {
             return this.cart.reduce((sum, item) => sum + item.price, 0);
@@ -14,6 +16,7 @@
         <div class="grid grid-cols-3 gap-4">
             @foreach ($products as $product)
                 <div class="border rounded-md p-3 cursor-pointer"
+                    :class="{ 'ring-2 ring-blue-500': selectedId === {{ $product->id }} }"
                     @click="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }})">
                     <p class="font-medium">{{ $product->name }}</p>
                     <p class="text-sm text-slate-500">Rp {{ number_format($product->price) }}</p>
