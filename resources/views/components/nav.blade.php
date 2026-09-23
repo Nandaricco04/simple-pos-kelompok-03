@@ -19,4 +19,5 @@
             Transaksi
         </a>
     </div>
+    <a href="{{ route('products.index') }}" class="hover:underline">Produk</a>
 </nav>
