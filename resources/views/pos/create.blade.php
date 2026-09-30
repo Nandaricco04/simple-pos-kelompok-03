@@ -2,102 +2,48 @@
 @section('title', 'Kasir')
 @section('content')
     <h1 class="text-lg font-semibold mb-4">Transaksi Kasir</h1>
-    <div x-data="{
+    @if (session('success'))
+        <div class="bg-green-50 text-green-700 p-3 rounded-md mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @error('items')
+        <div class="bg-red-50 text-red-700 p-3 rounded-md mb-4">{{ $message }}</div>
+    @enderror
+    
+    <form method="POST" action="{{ route('transactions.store') }}" x-data="{
         cart: [],
-        selectedId: null,
         addToCart(id, name, price) {
             this.cart.push({ id, name, price });
-            this.selectedId = id;
         },
-
-        removeFromCart(id) {
-            this.cart = this.cart.filter(item => item.id !== id);
-        },
-
         subtotal() {
             return this.cart.reduce((sum, item) => sum + item.price, 0);
         }
     }">
-        <div class="grid grid-cols-3 gap-4">
-            @foreach ($products as $product)
-                <div class="border rounded-md p-3 cursor-pointer transition-all"
-                    :class="{ 'ring-2 ring-blue-500': selectedId === {{ $product->id }} }"
-                    @click="addToCart({{ $product->id }}, '{{ $product->name }}', {{ $product->price }})">
-                    
-                    <div class="flex items-center justify-between mb-1">
+
+        @csrf
+            <div class="grid grid-cols-3 gap-4">
+                @foreach ($products as $product)
+                    <div class="border rounded-md p-3 cursor-pointer"
+                        @click="addToCart({{ $product->id }}, '{{ $product->name }}',
+                        {{ $product->price }})">
                         <p class="font-medium">{{ $product->name }}</p>
-                        
-                        {{-- Badge Stok Menipis (Langkah 12) --}}
-                        @if ($product->stock < 10)
-                            <span class="text-xs font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-700">
-                                Stok Menipis
-                            </span>
-                        @endif
+                        <p class="text-sm text-slate-500">
+                            Rp {{ number_format($product->price) }}</p>
                     </div>
-
-                    <p class="text-sm text-slate-500">Rp {{ number_format($product->price) }}</p>
-                </div>
-            @endforeach
-        </div>
-        
-        @if ($products->hasPages())
-            <div class="flex items-center justify-center gap-2 mt-6">
-                {{-- Previous --}}
-                @if ($products->onFirstPage())
-                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">
-                        ←
-                    </span>
-                @else
-                    <a href="{{ $products->previousPageUrl() }}"
-                        class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-gray-100">
-                        ←
-                    </a>
-                @endif
-
-                @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
-                    @if ($page == $products->currentPage())
-                        <span class="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-md">
-                            {{ $page }}
-                        </span>
-                    @else
-                        <a href="{{ $url }}"
-                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50">
-                            {{ $page }}
-                        </a>
-                    @endif
                 @endforeach
-                {{-- Next --}}
-                @if ($products->hasMorePages())
-                    <a href="{{ $products->nextPageUrl() }}"
-                        class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-gray-100">
-                        →
-                    </a>
-                @else
-                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-md cursor-not-allowed">
-                        →
-                    </span>
-                @endif
             </div>
-        @endif
-
-        <div class="mt-4 border-t pt-3">
-            <template x-for="item in cart" :key="item.id">
-                <div class="flex items-center justify-between border-b py-2">
-                    <p x-text="item.name + ' - Rp ' + item.price"></p>
-
-                    <button
-                        type="button"
-                        @click="removeFromCart(item.id)"
-                        class="bg-red-500 text-white px-2 py-1 text-xs rounded hover:bg-red-600 transition-colors"
-                    >
-                        Hapus
-                    </button>
-                </div>
-            </template>
-
-            <p class="font-semibold mt-2">
-                Subtotal: Rp <span x-text="subtotal()"></span>
-            </p>
-        </div>
-    </div>
-@endsection
+            <div class="mt-4 border-t pt-3">
+                <template x-for="(item, index) in cart" :key="index">
+                    <div>
+                        <p x-text="item.name + ' - Rp ' + item.price"></p>
+                        <input type="hidden" :name="'items[' + index + '][product_id]'" :value="item.id">
+                        <input type="hidden" :name="'items[' + index + '][qty]'" value="1">
+                    </div>
+                </template>
+                <p class="font-semibold mt-2">Subtotal: Rp <span x-text="subtotal()"></span></p>
+                <button type="submit" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded-md">Bayar</button>
+            </div>
+        </form>
+    @endsection
