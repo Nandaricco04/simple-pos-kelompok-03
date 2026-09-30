@@ -28,4 +28,20 @@ class StoreTransactionRequest extends FormRequest
         'items.*.qty' => ['required', 'integer', 'min:1'],
         ];
     }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            foreach ($this->items ?? [] as $index => $item) {
+                $product = \App\Models\Product::find($item['product_id'] ?? null);
+
+                if ($product && ($item['qty'] ?? 0) > $product->stock) {
+                    $validator->errors()->add(
+                        'items',
+                        "Stok produk {$product->name} tidak mencukupi."
+                    );
+                }
+            }
+        });
+    }
 }
