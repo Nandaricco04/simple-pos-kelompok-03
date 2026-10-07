@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Kasir</title>
+    <script type="module" src="http://[::1]:5173/@vite/client"></script><link rel="stylesheet" href="http://[::1]:5173/resources/css/app.css" /><script type="module" src="http://[::1]:5173/resources/js/app.js"></script></head>
+<body>
+    <nav class="bg-slate-900 text-white px-4 py-3 flex justify-between items-center">
+    <span class="font-semibold">Simple POS</span>
+
+    <div class="flex gap-6">
+        <a href="http://127.0.0.1:8000/pos"
+           class="hover:underline font-semibold text-white">
+            Kasir
+        </a>
+        <a href="http://127.0.0.1:8000/transactions"
+           class="hover:underline text-slate-300">
+            Transaksi
+        </a>
+    </div>
+    <a href="http://127.0.0.1:8000/products" class="hover:underline">Produk</a>
+</nav>    <main>    <h1 class="text-lg font-semibold mb-4">Transaksi Kasir</h1>
+
+    
+    
+    <form
+        method="POST"
+        action="http://127.0.0.1:8000/pos"
+        x-data="{
+            cart: [],
+
+            addToCart(id, name, price) {
+                let existingItem = this.cart.find(item => item.id === id);
+
+                if (existingItem) {
+                    existingItem.qty++;
+                } else {
+                    this.cart.push({
+                        id: id,
+                        name: name,
+                        price: price,
+                        qty: 1
+                    });
+                }
+            },
+
+            increaseQty(index) {
+                this.cart[index].qty++;
+            },
+
+            decreaseQty(index) {
+                if (this.cart[index].qty > 1) {
+                    this.cart[index].qty--;
+                } else {
+                    this.cart.splice(index, 1);
+                }
+            },
+
+            subtotal() {
+                return this.cart.reduce((sum, item) => {
+                    return sum + (item.price * item.qty);
+                }, 0);
+            }
+        }"
+    >
+
+        <input type="hidden" name="_token" value="yOzAOVgHbrpk0cAEhBrJ7k0nGTmA5aT7YKwV4kLt" autocomplete="off">        <div class="grid grid-cols-3 gap-4">
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        1,
+                        'iure eum',
+                        41599
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            iure eum
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 41,599
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        2,
+                        'dolorum explicabo',
+                        20597
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            dolorum explicabo
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 20,597
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        3,
+                        'aut dolore',
+                        30428
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            aut dolore
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 30,428
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        4,
+                        'dolore ipsam',
+                        45701
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            dolore ipsam
+                        </p>
+
+                                                    <span class="text-xs font-medium px-2 py-0.5 rounded bg-amber-100 text-amber-700">
+                                Stok Menipis
+                            </span>
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 45,701
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        5,
+                        'maxime sed',
+                        32589
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            maxime sed
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 32,589
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        6,
+                        'perspiciatis animi',
+                        36550
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            perspiciatis animi
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 36,550
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        7,
+                        'ullam dolorem',
+                        18908
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            ullam dolorem
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 18,908
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        8,
+                        'et omnis',
+                        43620
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            et omnis
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 43,620
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        9,
+                        'facilis magni',
+                        10769
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            facilis magni
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 10,769
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        10,
+                        'odit quia',
+                        4037
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            odit quia
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 4,037
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        11,
+                        'itaque iste',
+                        9776
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            itaque iste
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 9,776
+                    </p>
+                </div>
+                            <div
+                    class="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                    @click="addToCart(
+                        12,
+                        'ut expedita',
+                        39854
+                    )"
+                >
+                    <div class="flex items-center justify-between mb-1">
+                        <p class="font-medium">
+                            ut expedita
+                        </p>
+
+                                            </div>
+
+                    <p class="text-sm text-slate-500">
+                        Rp 39,854
+                    </p>
+                </div>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-2 mt-6">
+
+                                    <span class="px-3 py-2 text-sm text-gray-400 bg-gray-100 rounded-md">
+                        ←
+                    </span>
+                
+                                                            <span class="px-3 py-2 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-md">
+                            1
+                        </span>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=2"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            2
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=3"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            3
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=4"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            4
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=5"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            5
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=6"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            6
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=7"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            7
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=8"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            8
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=9"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            9
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=10"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            10
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=11"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            11
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=12"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            12
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=13"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            13
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=14"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            14
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=15"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            15
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=16"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            16
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=17"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            17
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=18"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            18
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=19"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            19
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=20"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            20
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=21"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            21
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=22"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            22
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=23"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            23
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=24"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            24
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=25"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            25
+                        </a>
+                                                                                <a
+                            href="http://127.0.0.1:8000/pos?page=26"
+                            class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-blue-50"
+                        >
+                            26
+                        </a>
+                                    
+                                    <a
+                        href="http://127.0.0.1:8000/pos?page=2"
+                        class="px-3 py-2 text-sm text-gray-600 bg-white border rounded-md hover:bg-gray-100"
+                    >
+                        →
+                    </a>
+                
+            </div>
+        
+        <div class="mt-4 border-t pt-3">
+
+            <template x-for="(item, index) in cart" :key="item.id">
+                <div class="flex items-center justify-between border-b py-3">
+
+                    <div>
+                        <p class="font-medium" x-text="item.name"></p>
+
+                        <p class="text-sm text-slate-500">
+                            Rp <span x-text="item.price"></span>
+                        </p>
+
+                        <input
+                            type="hidden"
+                            :name="'items[' + index + '][product_id]'"
+                            :value="item.id"
+                        >
+
+                        <input
+                            type="hidden"
+                            :name="'items[' + index + '][qty]'"
+                            :value="item.qty"
+                        >
+                    </div>
+
+                    
+                    <div class="flex items-center gap-2">
+                        <button
+                            type="button"
+                            @click="decreaseQty(index)"
+                            class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        >
+                            -
+                        </button>
+
+                        <span
+                            class="w-6 text-center"
+                            x-text="item.qty"
+                        ></span>
+
+                        <button
+                            type="button"
+                            @click="increaseQty(index)"
+                            class="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                        >
+                            +
+                        </button>
+                    </div>
+
+                    
+                    <p class="font-medium">
+                        Rp <span x-text="item.price * item.qty"></span>
+                    </p>
+
+                </div>
+            </template>
+
+            
+            <p class="font-semibold mt-4">
+                Subtotal:
+                Rp <span x-text="subtotal()"></span>
+            </p>
+
+            
+            <button
+                type="submit"
+                class="mt-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            >
+                Bayar
+            </button>
+
+        </div>
+
+    </form>
+</main>
+</body>
+</html>
