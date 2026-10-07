@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 class DatabaseSeeder extends Seeder {
     public function run(): void
     {
+        $this->call(DemoUserSeeder::class);
+        
         $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
