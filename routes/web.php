@@ -5,6 +5,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
+
+
 Route::get('/', function () {
     return redirect()->route('pos.create');
 });
@@ -12,6 +14,7 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store']);
+    Route::get('/informasi', function () {return view('guest.info');})->name('guest.info');
 });
 
 Route::post('/logout', [LoginController::class, 'destroy'])
