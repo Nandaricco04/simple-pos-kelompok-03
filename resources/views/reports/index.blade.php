@@ -92,7 +92,6 @@
 </form>
 
 <div class="bg-white border rounded-md p-4 max-w-sm">
-
     <p class="text-sm text-slate-500">
         Total Penjualan
     </p>
@@ -104,7 +103,6 @@
     <p class="text-sm text-slate-500 mt-2">
         {{ $jumlahTransaksi }} transaksi
     </p>
-
 </div>
 
 @endsection
