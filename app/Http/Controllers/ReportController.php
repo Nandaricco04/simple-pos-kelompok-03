@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Exports\SalesReportExport;
 use App\Jobs\ProcessProductImport;
 use App\Models\Transaction;
@@ -82,18 +83,25 @@ class ReportController extends Controller
     {
         [$from, $to] = $this->resolveDateRange($request);
 
+        $topProducts = DB::table('transaction_details')
+            ->join('transactions', 'transactions.id', '=', 'transaction_details.transaction_id')
+            ->join('products', 'products.id', '=', 'transaction_details.product_id')
+            ->whereBetween('transactions.created_at', [$from, $to])
+            ->select(
+                'products.name',
+                DB::raw('SUM(transaction_details.qty) as total_qty'),
+                DB::raw('SUM(transaction_details.subtotal) as total_revenue')
+            )
+            ->groupBy('products.id', 'products.name')
+            ->orderByDesc('total_qty')
+            ->limit(10)
+            ->get();
+
         $pdf = Pdf::loadView('reports.pdf', [
-            'totalPenjualan' => $this->filteredQuery($from, $to)
-                ->sum('total'),
-
-            'jumlahTransaksi' => $this->filteredQuery($from, $to)
-                ->count(),
-
-            'transactions' => $this->filteredQuery($from, $to)
-                ->latest()
-                ->limit(50)
-                ->get(),
-
+            'totalPenjualan' => $this->filteredQuery($from, $to)->sum('total'),
+            'jumlahTransaksi' => $this->filteredQuery($from, $to)->count(),
+            'transactions' => $this->filteredQuery($from, $to)->latest()->limit(50)->get(),
+            'topProducts' => $topProducts,
             'from' => $from->toDateString(),
             'to' => $to->toDateString(),
         ]);
