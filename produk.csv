@@ -1,7 +1,6 @@
-
 name,category_id,price
-Kopi Hitam,1,15000
+Kopi Hitam,1,30000
 Teh Manis,1,10000
 Produk Tanpa Kategori,999,5000
 Harga Tidak Valid,1,abc
-  
+  ,,
