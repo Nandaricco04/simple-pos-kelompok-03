@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\SalesReportExport;
 use App\Jobs\ProcessProductImport;
 use App\Models\Transaction;
+use App\Models\Category;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -20,13 +21,24 @@ class ReportController extends Controller
     public function index(Request $request): View
     {
         [$from, $to] = $this->resolveDateRange($request);
+
+        $categoryId = $request->input('category_id');
+
         $query = $this->filteredQuery($from, $to);
+
+        if ($categoryId) {
+            $query->whereHas('details.product', function ($q) use ($categoryId) {
+                $q->where('category_id', $categoryId);
+            });
+        }
 
         return view('reports.index', [
             'totalPenjualan' => $query->sum('total'),
             'jumlahTransaksi' => $query->count(),
             'from' => $from->toDateString(),
             'to' => $to->toDateString(),
+            'categories' => Category::orderBy('name')->get(),
+            'categoryId' => $categoryId,
         ]);
     }
 
