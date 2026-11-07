@@ -1,4 +1,7 @@
 
+# Catatan Perbandingan Pengalaman Pengujian (Postman/Insomnia vs cURL):
+# Menguji ketiga endpoint (/api/v1/categories, /api/v1/products, dan /api/v1/transactions) melalui Postman atau Insomnia memberikan pengalaman yang jauh lebih visual, terstruktur, dan ramah pengguna dibandingkan cURL. Melalui antarmuka GUI, pengelolaan autentikasi Bearer Token dapat diatur secara otomatis menggunakan environment/collection variable dari hasil endpoint login, pengisian header khusus seperti Idempotency-Key serta parameter query paginasi dapat diinputkan lewat form tabel tanpa repot, dan respon JSON langsung diformat rapi dengan pewarnaan sintaks (syntax highlighting) beserta informasi waktu respons dan status HTTP yang jelas. Sebaliknya, cURL meskipun sangat ringan, cepat, dan unggul untuk otomasi skrip terminal atau pipeline CI/CD, terasa lebih kaku untuk pengujian interaktif karena mengharuskan penulisan header dan payload secara manual dalam satu baris panjang serta rentan mengalami masalah escaping tanda kutip di lingkungan terminal Windows.
+
 openapi: 3.0.0
 info:
   title: Simple POS API
