@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -13,6 +14,12 @@ use Tests\TestCase;
 class ApiTransactionTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+        parent::tearDown();
+    }
 
     private function payload(): array
     {
@@ -31,6 +38,22 @@ class ApiTransactionTest extends TestCase
     {
         $this->postJson('/api/v1/transactions', $this->payload())->assertUnauthorized();
         // 401
+    }
+
+    public function test_expired_token_cannot_create_transaction(): void
+    {
+        Carbon::setTestNow(now());
+
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['transactions:create']);
+
+        // Majukan waktu melewati masa berlaku token (1 hari)
+        Carbon::setTestNow(now()->addDays(2));
+
+        $this->postJson('/api/v1/transactions', $this->payload(), ['Idempotency-Key' => 'k_exp'])
+            ->assertUnauthorized();
+
+        Carbon::setTestNow();
     }
 
     public function test_token_without_ability_is_forbidden(): void

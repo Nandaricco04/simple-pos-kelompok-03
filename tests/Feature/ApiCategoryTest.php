@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Category;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -12,9 +13,30 @@ class ApiCategoryTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+        parent::tearDown();
+    }
+
     public function test_guest_cannot_get_categories(): void
     {
         $this->getJson('/api/v1/categories')->assertUnauthorized();
+    }
+
+    public function test_expired_token_cannot_get_categories(): void
+    {
+        Carbon::setTestNow(now());
+
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['categories:read']);
+
+        // Majukan waktu melewati batas kedaluwarsa token (1 hari)
+        Carbon::setTestNow(now()->addDays(2));
+
+        $this->getJson('/api/v1/categories')->assertUnauthorized();
+
+        Carbon::setTestNow();
     }
 
     public function test_token_without_ability_is_forbidden(): void
