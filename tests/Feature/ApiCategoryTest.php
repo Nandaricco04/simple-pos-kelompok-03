@@ -14,14 +14,14 @@ class ApiCategoryTest extends TestCase
 
     public function test_guest_cannot_get_categories(): void
     {
-        $this->getJson('/api/categories')->assertUnauthorized();
+        $this->getJson('/api/v1/categories')->assertUnauthorized();
     }
 
     public function test_token_without_ability_is_forbidden(): void
     {
         Sanctum::actingAs(User::factory()->create(), ['products:read']);
 
-        $this->getJson('/api/categories')->assertForbidden();
+        $this->getJson('/api/v1/categories')->assertForbidden();
     }
 
     public function test_can_get_categories_with_valid_token_and_ability(): void
@@ -31,7 +31,7 @@ class ApiCategoryTest extends TestCase
 
         Sanctum::actingAs(User::factory()->create(), ['categories:read']);
 
-        $response = $this->getJson('/api/categories')
+        $response = $this->getJson('/api/v1/categories')
             ->assertOk()
             ->assertJsonStructure([
                 'data' => [
@@ -49,7 +49,7 @@ class ApiCategoryTest extends TestCase
 
         Sanctum::actingAs(User::factory()->create(), ['categories:read']);
 
-        $response = $this->getJson('/api/categories?q=Minum')
+        $response = $this->getJson('/api/v1/categories?q=Minum')
             ->assertOk();
 
         $this->assertCount(1, $response->json('data'));
@@ -63,7 +63,7 @@ class ApiCategoryTest extends TestCase
 
         Sanctum::actingAs(User::factory()->create(), ['categories:read']);
 
-        $response = $this->getJson('/api/categories?sort=-name')
+        $response = $this->getJson('/api/v1/categories?sort=-name')
             ->assertOk();
 
         $this->assertEquals('Buku', $response->json('data.0.name'));

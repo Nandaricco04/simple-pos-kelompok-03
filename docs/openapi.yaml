@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 paths:
-  /api/login:
+  /api/v1/login:
     post:
       summary: Login dan dapatkan token
       requestBody:
@@ -38,7 +38,7 @@ paths:
                   message:
                     type: string
 
-  /api/categories:
+  /api/v1/categories:
     get:
       summary: Ambil daftar kategori
       security:
@@ -63,7 +63,7 @@ paths:
         '401':
           description: Token tidak ada atau tidak valid
 
-  /api/products:
+  /api/v1/products:
     get:
       summary: Ambil daftar produk
       security:
@@ -149,11 +149,11 @@ paths:
                       first:
                         type: string
                         nullable: true
-                        example: "http://localhost/api/products?page=1"
+                        example: "http://localhost/api/v1/products?page=1"
                       last:
                         type: string
                         nullable: true
-                        example: "http://localhost/api/products?page=10"
+                        example: "http://localhost/api/v1/products?page=10"
                       prev:
                         type: string
                         nullable: true
@@ -161,7 +161,7 @@ paths:
                       next:
                         type: string
                         nullable: true
-                        example: "http://localhost/api/products?page=2"
+                        example: "http://localhost/api/v1/products?page=2"
                   meta:
                     type: object
                     description: Informasi metadata paginasi
@@ -178,7 +178,7 @@ paths:
                         example: 10
                       path:
                         type: string
-                        example: "http://localhost/api/products"
+                        example: "http://localhost/api/v1/products"
                       per_page:
                         type: integer
                         example: 15
@@ -212,7 +212,7 @@ paths:
                   errors:
                     type: object
 
-  /api/transactions:
+  /api/v1/transactions:
     post:
       summary: Buat transaksi baru
       security:
