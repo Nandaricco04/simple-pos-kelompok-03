@@ -45,4 +45,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class);
     }
+
+    public $accessTokenCreatedAt;
+    public $accessTokenExpiresAt;
+
+    public function withAccessToken($accessToken)
+    {
+        $this->accessToken = $accessToken;
+        $this->accessTokenCreatedAt = now();
+        $expirationMinutes = (int) (config('sanctum.expiration') ?: 1440);
+        $this->accessTokenExpiresAt = now()->addMinutes($expirationMinutes);
+
+        return $this;
+    }
 }
